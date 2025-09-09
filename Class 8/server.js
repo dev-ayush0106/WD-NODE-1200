@@ -1,8 +1,8 @@
 const express=require("express")
 const app=express()
-const noteModel=require("./src/model/notes.model")
 
 const connectToDb=require("./src/db/db")
+const noteModel=require("./src/model/notes.model")
 app.use(express.json())
 // mongodb atlas(cloud) mongodb compass (application)
 // mongodb+srv://<db_username>:<db_password>@cluster0.8svjs.mongodb.net/
