@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
-
+import axios from 'axios';
 export default function FacialExpression() {
     const videoRef = useRef();
     const [modelsLoaded, setModelsLoaded] = useState(false);
     const [expression, setExpression] = useState('No detection yet');
+    let [songs,setSongs]=useState([]);
 
     // Load models and start video when component mounts
     useEffect(() => {
@@ -72,6 +73,24 @@ export default function FacialExpression() {
         }
     };
 
+    let url="http://localhost:3000/songs"
+
+    async function getSongs(){
+        let data= await axios.get(url)
+        setSongs(data.data)
+    } 
+
+    useEffect(()=>{
+        getSongs()
+    },[])
+
+    let filterSongs=songs.filter((el)=>el.mood==expression.split(" ")[0])
+    console.log("Filter:",filterSongs)
+
+    console.log(expression.split(" ")[0])
+    console.log(typeof(expression))
+
+    console.log(songs)
     return (
         <div style={{ textAlign: 'center', paddingTop: '20px' }}>
             <h1>😃 Mood Detection</h1>
@@ -88,6 +107,13 @@ export default function FacialExpression() {
                 Detect Mood
             </button>
             <h2>Expression: {expression}</h2>
+
+            {filterSongs.map((el)=>(
+                <div>
+                <p>{el.title}</p>
+                <audio src={el.audioFile} controls></audio>
+                </div>
+            ))}
         </div>
     );
 }
